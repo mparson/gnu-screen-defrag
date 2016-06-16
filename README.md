@@ -47,3 +47,10 @@ bind R /home/mparson/bin/scdefrag
 I can then just hit `CTRL-A` `R` and my windows get re-numbered.
 
 The window you are sitting in will flash rapidly as it cycles through the windows, but you should wind back up on the window you started in.
+
+---
+Tested on:
+
+4.03.01 Fedora 23
+4.03.01 (macports) on MacOS X 10.10.5
+4.02.01 (pkgsrc) on NetBSD 6.1.4/amd64
