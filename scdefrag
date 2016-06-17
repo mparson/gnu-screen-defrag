@@ -1,7 +1,5 @@
 #!/bin/bash
 
-tempname=renum_$$
-
 # get the sessionname for our current screen
 screen -X sessionname
 session=$(screen -X -Q lastmsg | awk '{print $NF'} | tr -d \')
@@ -10,40 +8,12 @@ session=$(screen -X -Q lastmsg | awk '{print $NF'} | tr -d \')
 screen -x ${session} -X msgminwait 0
 screen -x ${session} -X msgwait 0
 
-# save the current window's title
-origname=$( screen -Q title )
+let NEXT="0"
 
-# rename it to something unique-ish
-screen -x ${session} -X title ${tempname}
-
-# start with the first window
-screen -x ${session} -X select 0
-
-let NEXT="0" 
-
-getcur() {
-	current=$(screen -Q number | awk '{print $1}')
-}
-
-renumscreen() {
-  screen -x ${session} -X number ${NEXT}
-  screen -x ${session} -X next
+for win in $(screen -x ${session} -X -Q windows "%n "); do
+  screen -x ${session} -p ${win} -X number ${NEXT}
   let NEXT="${NEXT}+1"
-  getcur
-}
-
-getcur
-let loopcnt=0
-
-# renumber the first screen to get $current over 0
-renumscreen
-
-# renumber the rest
-while [ ${current} -gt 0 ]; do 
-  renumscreen
 done
 
-screen -x ${session} -Q select "$tempname" >/dev/null 2>&1
-screen -x ${session} -X title ${origname}
 screen -x ${session} -X msgminwait 1
-screen -x ${session} -X msgwait 5 
+screen -x ${session} -X msgwait 5
